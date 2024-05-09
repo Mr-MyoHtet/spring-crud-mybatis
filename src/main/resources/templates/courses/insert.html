@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<title>mybatis crud</title>
+	<link rel="stylesheet" th:href="@{/webjars/bootstrap/5.3.2/css/bootstrap.min.css}">
+	<script th:src="@{/webjars/bootstrap/5.3.2/js/bootstrap.min.js}"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+</head>
+
+<body>
+	<div class=" mx-auto mt-3 mb-3" style="width: 1024px;">
+		<a href="" th:href=" @{/course/back}" class="mb-3">
+			<button class="btn btn-primary btn-small">Back</button>
+		</a>
+	</div>
+	<div class=" mx-auto mt-4 mb-4" style="width: 1024px;">
+		<form th:object="${course}" th:action="@{/course/insert}" method="post" enctype="multipart/form-data">
+			<div class="mb-3">
+				<label for="name" class="form-label">Name</label>
+				<input type="text" class="form-control" id="name" placeholder="Name" th:field="*{name}">
+			</div>
+			<div class="mb-3">
+				<label for="start_date" class="form-label">Start Date</label>
+				<!--<input type="date" class="form-control" id="start_date" placeholder="Start Date"
+					th:field="*{start_date}">
+					-->
+				<select id="yearSelect" name="year">
+				</select>
+				<select id="monthSelect" name="month">
+				</select>
+				<select id="daySelect" name="day">
+				</select>
+				<select id="hourSelect" name="hour">
+				</select>
+				<select id="minuteSelect" name="minute">
+				</select>
+			</div>
+			<div class="mb-3">
+				<label for="end_date" class="form-label">End Date</label>
+				<input type="date" class="form-control" id="end_date" placeholder="End Date" th:field="*{end_date}">
+			</div>
+			<div class="mb-3">
+				<label for="duration" class="form-label">Duration</label>
+				<input type="number" class="form-control" id="duration" placeholder="Duration" th:field="*{duration}">
+			</div>
+			<div class="mb-3">
+				<label for="fees" class="form-label">Fees</label>
+				<input type="number" class="form-control" id="fees" placeholder="Fees" th:field="*{fees}">
+			</div>
+			<div class="mb-0">
+				<label for="fees" class="form-label">Available</label>
+			</div>
+			<div class="form-check form-check-inline mb-3">
+				<input class="form-check-input" type="radio" name="available" id="inlineRadio1" value="YES"
+					th:field="*{available}">
+				<label class="form-check-label" for="inlineRadio1">YES</label>
+			</div>
+			<div class="form-check form-check-inline mb-3">
+				<input class="form-check-input" type="radio" name="available" id="inlineRadio2" value="NO"
+					th:field="*{available}">
+				<label class=" form-check-label" for="inlineRadio2">NO</label>
+			</div>
+			<!--<img th:src="@{/images/} + ${imageFilename}" alt="Course Image"/>
+				-->
+			<!--<img th:src="@{'/images/' + ${imageFilename}}" alt="Course Image" />
+
+			<th data-th-text="${imageFilename}"></th>
+			-->
+			<div class="mb-4">
+				<!--<div th:if="${imageFilename != null}">
+					-->
+				<!--<th data-th-text="${imageFilename}"></th>
+						-->
+				<!--</div>
+					-->
+				<label for="course_img" class="form-label">Course Cover Image</label>
+				<input type="file" class="form-control" id="course_img" placeholder="Course Image"
+					th:field="*{course_img}">
+			</div>
+			<div class="mb-3">
+				<button type="submit" class="btn btn-primary form-control"> Save</button>
+			</div>
+	</div>
+	</form>
+	<script>
+		//dropdown  for month year
+		var yearSelect = document.getElementById("yearSelect");
+		var startYear = 2024;
+		var endYear = 2029;
+		for (var year = startYear; year <= endYear; year++) {
+			var yearOption = document.createElement("option");
+			yearOption.text = year;
+			yearOption.value = year;
+			yearSelect.append(yearOption);
+		}
+		//dropdown for month
+		var monthSelect = document.getElementById("monthSelect");
+		
+		var startMonth = 1;
+		var endMonth = 12;
+		for (var month = startMonth; month <= endMonth; month++) {
+			var monthOption = document.createElement("option");
+			monthOption.text = month;
+			monthOption.value = month;
+			monthSelect.append(monthOption);
+		}
+		//dropdown for day
+		var daySelect = document.getElementById("daySelect");
+		var startDay = 1;
+		var endDay = 31;
+		for (var day = startDay; day <= endDay; day++) {
+			var dayOption = document.createElement("option");
+			dayOption.text = day;
+			dayOption.value = day;
+			daySelect.append(dayOption);
+		}
+		//dropdown for hour
+		var hourSelect = document.getElementById("hourSelect");
+		var starthour = 1;
+		var endhour = 24;
+		for (var hour = starthour; hour <= endhour; hour++) {
+			var hourOption = document.createElement("option");
+			hourOption.text = hour;
+			hourOption.value = hour;
+			hourSelect.append(hourOption);
+		}
+		//dropdown for minute
+		var minuteSelect = document.getElementById("minuteSelect");
+		var startminute = 1;
+		var endminute = 60;
+		for (var minute = startminute; minute <= endminute; minute++) {
+			var minuteOption = document.createElement("option");
+			minuteOption.text = minute;
+			minuteOption.value = minute;
+			minuteSelect.append(minuteOption);
+		}
+	</script>
+
+</body>
+
+</html>

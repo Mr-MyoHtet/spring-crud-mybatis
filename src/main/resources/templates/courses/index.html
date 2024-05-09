@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<title>mybatis crud</title>
+	<link rel="stylesheet" th:href="@{/webjars/bootstrap/5.3.2/css/bootstrap.min.css}">
+	<script th:src="@{/webjars/bootstrap/5.3.2/js/bootstrap.min.js}"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+</head>
+
+<body>
+	<div class=" mx-auto mt-3 mb-3" style="width: 1024px;">
+		<a href="" th:href=" @{/course/create}" class="mb-3">
+			<button class="btn btn-primary btn-small">Add Course</button>
+		</a>
+	</div>
+	<div class="mx-auto mt-3 mb-3" style="width: 1024px;">
+
+		<form class="form-inline d-flex my-3" th:object="${course}" th:action="@{/course/search}" method="post">
+			<div class="row g-3 align-items-center">
+				<div class="col-auto p-4">
+					<label for="name" class="col-form-label">Name</label>
+				</div>
+				<div class="col-auto">
+					<input type="text" id="name" class="form-control" th:value="${name}" name="name">
+				</div>
+			</div>
+			<div class="row g-3 align-items-center">
+				<div class="col-auto p-4">
+					<label for="start_date" class="col-form-label">Start Date</label>
+				</div>
+				<div class="col-auto">
+					<input type="date" id="start_date" class="form-control" th:value="${start_date}" name="start_date">
+				</div>
+			</div>
+			<div class="row g-3 align-items-center">
+				<div class="col-auto p-4">
+					<label for="end_date" class="col-form-label">End Date</label>
+				</div>
+				<div class="col-auto">
+					<input type="date" id="end_date" class="form-control" th:value="${end_date}" name="end_date">
+				</div>
+			</div>
+			<div class="row g-3 align-items-center">
+				<div class="col-auto p-1 mx-2">
+					<button class="btn btn-primary" name="search">search</button>
+				</div>
+				<div class="col-auto">
+					<a class="btn btn-info" th:href="@{/course/clear}" data-th-text="Clear">
+					</a>
+				</div>
+			</div>
+		</form>
+
+	</div>
+	</div>
+	<th>
+		<!-- <img th:src="@{aa.jpg}" alt="Example Image" />
+		-->
+
+	</th>
+	<div class="mx-auto mt-3 mb-3" style="width: 1024px;">
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th scope="col">ID</th>
+					<th scope="col">NAME</th>
+					<th scope="col">START</th>
+					<th scope="col">END</th>
+					<th scope="col">DURATION</th>
+					<th scope="col">FEES</th>
+					<th scope="col">AVAILABLE</th>
+					<th scope="col">Image</th>
+					<th scope="col">DELETE</th>
+					<th scope="col">EDIT</th>
+					<th scope="col">CSV</th>
+				</tr>
+			</thead>
+			<tbody>
+				<!--<th data-th-text="${start_date}"></th>-->
+				<tr data-th-each="cou : ${courses}" style="cursor: pointer" th:some-field="${cou.id}"
+					onclick="rowClicked(this.getAttribute('some-field'))">
+					<th data-th-text="${cou.id}"></th>
+					<th data-th-text="${cou.name}" th:value="${name}"></th>
+					<th data-th-text="${#dates.format(cou.start_date, 'yyyy-MM-dd (E) HH:mm:ss')}"></th>
+					<th data-th-text="${#dates.format(cou.end_date, 'yyyy-MM-dd (E) HH:mm:ss')}"></th>
+					<th data-th-text="${cou.duration}"></th>
+					<th data-th-text="${cou.fees}"></th>
+					<th data-th-text="${cou.available}"></th>
+					<th><img th:src="@{/images/} + ${cou.course_img}" alt="Course Image"
+							style="width: 60px; height: 60px;" /></th>
+					<th><a class="btn btn-danger" th:href="@{/course/delete/{id}(id=${cou.id})}" data-th-text="DELETE">
+						</a></th>
+					<th><a class="btn btn-secondary" th:href="@{/course/edit/{id}(id=${cou.id})}" data-th-text="EDIT">
+						</a></th>
+					<th><a class="btn btn-info" th:href="@{/course/csv/{id}(id=${cou.id})}" data-th-text="CSV"
+							onclick="showAlert()">
+						</a></th>
+
+				</tr>
+			</tbody>
+		</table>
+		<div th:if="${courses.totalPages > 0}" class="col-auto">
+			<nav>
+				<ul class="pagination">
+					<!-- 前へ -->
+					<li th:if="${courses.hasPrevious()}" class="page-item">
+						<a class="page-link"
+							th:href="@{'/?page=' + ${courses.number - 1} + '&name=' + ${name} + '&start=' + ${start_date}	+ '&end=' + ${end_date}}">
+							前へ
+						</a>
+					</li>
+
+					<!-- <th:block th:each="i: ${#numbers.sequence(0, courses.totalPages - 1)}"
+						th:switch="${courses.number}">
+						<li th:case="${i}" class="page-item active">
+							<a class="page-link" th:text="${i+1}">
+							</a>
+						</li>
+						<li th:case="*" class="page-item">
+							<a class="page-link"
+								th:href="@{'/?page=' + ${i} + '&name=' + ${name} + '&start=' + ${start_date}	+ '&end=' + ${end_date}}"
+								th:text="${i +1 }"></a>
+						</li>
+					</th:block>
+					-->
+					<ul class="pagination">
+						<th:block th:each="i : ${#numbers.sequence(0, courses.totalPages - 1)}"
+							th:switch="${courses.number}">
+							<li th:case="${i}" class="page-item active">
+							<li th:if="${i == courses.number}" class="page-item active">
+								<a class="page-link" th:text="${i+1}"></a>
+							</li>
+							<li th:unless="${i == courses.number}" class="page-item">
+								<a class="page-link"
+									th:href="@{'/?page=' + ${i} + '&name=' + ${name} + '&start=' + ${start_date}	+ '&end=' + ${end_date}}"
+									th:text="${i +1 }"></a>
+							</li>
+							<li th:if="${i == boundaryPages && i < courses.number - surroundingPages - 1}"
+								class="page-item disabled">
+								<span class="page-link">...</span>
+							</li>
+							<li th:if="${i == courses.totalPages - boundaryPages - 1 && i > courses.number + surroundingPages}"
+								class="page-item disabled">
+								<span class="page-link">...</span>
+							</li>
+						</th:block>
+					</ul>
+
+					<li th:if="${courses.hasNext()}" class="page-item">
+						<a class="page-link"
+							th:href="@{'/?page=' + ${courses.number + 1} + '&name=' + ${name} + '&start=' + ${start_date}	+ '&end=' + ${end_date}}">
+							次へ
+						</a>
+					</li>
+
+				</ul>
+
+
+
+				<script>
+					function showAlert() {
+						alert("Hello");
+					}
+				</script>
+
+</body>
+
+</html>
