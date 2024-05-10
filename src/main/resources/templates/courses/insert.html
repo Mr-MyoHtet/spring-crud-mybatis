@@ -23,46 +23,56 @@
 				<input type="text" class="form-control" id="name" placeholder="Name" th:field="*{name}">
 			</div>
 			<div class="mb-3">
-				<label for="start_date" class="form-label">Start Date</label>
-				<select th:id="${'startYearSelect_' + __${instanceId}__}" name="startYear">
-					<!-- Options will be populated by JavaScript -->
+				<div>
+					<label for="start_date" class="form-label">Start Date</label>
+				</div>
+				<span>Year
+					<select th:id="${'startYearSelect_' + __${instanceId}__}" name="startYear" style="margin: 7px;">
+				</span>
 				</select>
-				<select th:id="${'startMonthSelect_' + __${instanceId}__}" name="startMonth">
-					<!-- Options will be populated by JavaScript -->
+				<span> Month
+					<select th:id="${'startMonthSelect_' + __${instanceId}__}" name="startMonth" style="margin: 7px;">
+				</span>
 				</select>
-				<select th:id="${'startDaySelect_' + __${instanceId}__}" name="startDay">
-					<!-- Options will be populated by JavaScript -->
+				<span>Days
+					<select th:id="${'startDaySelect_' + __${instanceId}__}" name="startDay" style="margin: 7px;">
+				</span>
 				</select>
-				<select th:id="${'startHourSelect_' + __${instanceId}__}" name="startHour">
-					<!-- Options will be populated by JavaScript -->
+				<span>Hour
+					<select th:id="${'startHourSelect_' + __${instanceId}__}" name="startHour" style="margin: 7px;">
+				</span>
 				</select>
-				<select th:id="${'startMinuteSelect_' + __${instanceId}__}" name="startMinute">
-					<!-- Options will be populated by JavaScript -->
+				<span>Minute
+					<select th:id="${'startMinuteSelect_' + __${instanceId}__}" name="startMinute"
+						style="margin: 10px;">
+				</span>
 				</select>
 			</div>
 			<div class="mb-3">
-				<label for="end_date" class="form-label">End Date</label>
-				<select th:id="${'endYearSelect_' + __${instanceId}__}" name="endYear">
-					<!-- Options will be populated by JavaScript -->
+				<div>
+					<label for="end_date" class="form-label">End Date</label>
+				</div>
+				<span>Year
+					<select th:id="${'endYearSelect_' + __${instanceId}__}" name="endYear" style="margin: 7px;">
+				</span>
 				</select>
-				<select th:id="${'endMonthSelect_' + __${instanceId}__}" name="endMonth">
-					<!-- Options will be populated by JavaScript -->
+				<span>Month
+					<select th:id="${'endMonthSelect_' + __${instanceId}__}" name="endMonth" style="margin: 7px;">
+				</span>
 				</select>
-				<select th:id="${'endDaySelect_' + __${instanceId}__}" name="endDay">
-					<!-- Options will be populated by JavaScript -->
+				<span>Days
+					<select th:id="${'endDaySelect_' + __${instanceId}__}" name="endDay" style="margin: 7px;">
+				</span>
 				</select>
-				<select th:id="${'endHourSelect_' + __${instanceId}__}" name="endHour">
-					<!-- Options will be populated by JavaScript -->
+				<span>Hour
+					<select th:id="${'endHourSelect_' + __${instanceId}__}" name="endHour" style="margin: 7px;">
+				</span>
 				</select>
-				<select th:id="${'endMinuteSelect_' + __${instanceId}__}" name="endMinute">
-					<!-- Options will be populated by JavaScript -->
+				<span>Minute
+					<select th:id="${'endMinuteSelect_' + __${instanceId}__}" name="endMinute" style="margin: 7px;">
+				</span>
 				</select>
 			</div>
-			<!--<div class="mb-3">
-				<label for="end_date" class="form-label">End Date</label>
-				<input type="date" class="form-control" id="end_date" placeholder="End Date" th:field="*{end_date}">
-			</div>
-			-->
 			<div class="mb-3">
 				<label for="duration" class="form-label">Duration</label>
 				<input type="number" class="form-control" id="duration" placeholder="Duration" th:field="*{duration}">
@@ -112,7 +122,7 @@
 	</div>
 	</form>
 	<script th:inline="javascript">
-	
+
 		var instanceId = /*[[${instanceId}]]*/ 0;
 
 		function populateDateTimeDropdowns(instanceId) {
@@ -156,7 +166,7 @@
 
 		populateDateTimeDropdowns(instanceId);
 
-	
+
 	</script>
 </body>
 
