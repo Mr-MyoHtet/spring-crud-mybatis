@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
-import net.sf.jsqlparser.expression.DateTimeLiteralExpression.DateTime;
 
 public class Course {
 
@@ -14,10 +13,11 @@ public class Course {
 	@DateTimeFormat(pattern = "yyyy-MM-ddHH:mm")
 	public Date start_date;
 
-	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	@DateTimeFormat(pattern = "yyyy-MM-ddHH:mm")
 	private Date end_date;
 	private int duration;
 	private int fees;
+	private String color;
 	private String available;
 	private String course_img;
 
@@ -100,6 +100,14 @@ public class Course {
 		return "Course [id=" + id + ", name=" + name + ", start_date=" + start_date + ", end_date=" + end_date
 				+ ", duration=" + duration + ", fees=" + fees + ", available=" + available + ", course_img="
 				+ course_img + ", module=" + module + "]";
+	}
+
+	public String getColor() {
+		return color;
+	}
+
+	public void setColor(String color) {
+		this.color = color;
 	}
 
 }

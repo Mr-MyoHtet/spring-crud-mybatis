@@ -124,19 +124,13 @@ public class CourseService {
 			minuteStringFormat = String.valueOf(minute);
 		}
 
-		String dateString = year + "-" + monthStringFormat + "-" + dayStringFormat + " " + hourStringFormat + ":"
+		String startDateStringFromat = year + "-" + monthStringFormat + "-" + dayStringFormat + " " + hourStringFormat + ":"
 				+ minuteStringFormat;
 
-		Date formatStartDate = null;
-		// dataStirng input to Date Format
-		SimpleDateFormat sdFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-		formatStartDate = sdFormat.parse(dateString);
+		SimpleDateFormat startDateOutput = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+		Date date = startDateOutput.parse(startDateStringFromat);
 
-		SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-		String formattedDate = inputFormat.format(formatStartDate);
-		Date startDate = inputFormat.parse(formattedDate);
-
-		return startDate;
+		return date;
 	}
 
 }

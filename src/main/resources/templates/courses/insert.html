@@ -24,24 +24,45 @@
 			</div>
 			<div class="mb-3">
 				<label for="start_date" class="form-label">Start Date</label>
-				<!--<input type="date" class="form-control" id="start_date" placeholder="Start Date"
-					th:field="*{start_date}">
-					-->
-				<select id="yearSelect" name="year">
+				<select th:id="${'startYearSelect_' + __${instanceId}__}" name="startYear">
+					<!-- Options will be populated by JavaScript -->
 				</select>
-				<select id="monthSelect" name="month">
+				<select th:id="${'startMonthSelect_' + __${instanceId}__}" name="startMonth">
+					<!-- Options will be populated by JavaScript -->
 				</select>
-				<select id="daySelect" name="day">
+				<select th:id="${'startDaySelect_' + __${instanceId}__}" name="startDay">
+					<!-- Options will be populated by JavaScript -->
 				</select>
-				<select id="hourSelect" name="hour">
+				<select th:id="${'startHourSelect_' + __${instanceId}__}" name="startHour">
+					<!-- Options will be populated by JavaScript -->
 				</select>
-				<select id="minuteSelect" name="minute">
+				<select th:id="${'startMinuteSelect_' + __${instanceId}__}" name="startMinute">
+					<!-- Options will be populated by JavaScript -->
 				</select>
 			</div>
 			<div class="mb-3">
 				<label for="end_date" class="form-label">End Date</label>
+				<select th:id="${'endYearSelect_' + __${instanceId}__}" name="endYear">
+					<!-- Options will be populated by JavaScript -->
+				</select>
+				<select th:id="${'endMonthSelect_' + __${instanceId}__}" name="endMonth">
+					<!-- Options will be populated by JavaScript -->
+				</select>
+				<select th:id="${'endDaySelect_' + __${instanceId}__}" name="endDay">
+					<!-- Options will be populated by JavaScript -->
+				</select>
+				<select th:id="${'endHourSelect_' + __${instanceId}__}" name="endHour">
+					<!-- Options will be populated by JavaScript -->
+				</select>
+				<select th:id="${'endMinuteSelect_' + __${instanceId}__}" name="endMinute">
+					<!-- Options will be populated by JavaScript -->
+				</select>
+			</div>
+			<!--<div class="mb-3">
+				<label for="end_date" class="form-label">End Date</label>
 				<input type="date" class="form-control" id="end_date" placeholder="End Date" th:field="*{end_date}">
 			</div>
+			-->
 			<div class="mb-3">
 				<label for="duration" class="form-label">Duration</label>
 				<input type="number" class="form-control" id="duration" placeholder="Duration" th:field="*{duration}">
@@ -49,6 +70,11 @@
 			<div class="mb-3">
 				<label for="fees" class="form-label">Fees</label>
 				<input type="number" class="form-control" id="fees" placeholder="Fees" th:field="*{fees}">
+			</div>
+			<div class="mb-3">
+				<label for="color" class="form-label">Pick a Color:</label>
+				<input type="color" id="color" name="color" th:field="*{color}" class="form-control"
+					style="width: 150px;" th:value="${color ?: '#ffff'}" th:placeholder="${color ?: '#ffff'}" />
 			</div>
 			<div class="mb-0">
 				<label for="fees" class="form-label">Available</label>
@@ -85,60 +111,53 @@
 			</div>
 	</div>
 	</form>
-	<script>
-		//dropdown  for month year
-		var yearSelect = document.getElementById("yearSelect");
-		var startYear = 2024;
-		var endYear = 2029;
-		for (var year = startYear; year <= endYear; year++) {
-			var yearOption = document.createElement("option");
-			yearOption.text = year;
-			yearOption.value = year;
-			yearSelect.append(yearOption);
-		}
-		//dropdown for month
-		var monthSelect = document.getElementById("monthSelect");
-		
-		var startMonth = 1;
-		var endMonth = 12;
-		for (var month = startMonth; month <= endMonth; month++) {
-			var monthOption = document.createElement("option");
-			monthOption.text = month;
-			monthOption.value = month;
-			monthSelect.append(monthOption);
-		}
-		//dropdown for day
-		var daySelect = document.getElementById("daySelect");
-		var startDay = 1;
-		var endDay = 31;
-		for (var day = startDay; day <= endDay; day++) {
-			var dayOption = document.createElement("option");
-			dayOption.text = day;
-			dayOption.value = day;
-			daySelect.append(dayOption);
-		}
-		//dropdown for hour
-		var hourSelect = document.getElementById("hourSelect");
-		var starthour = 1;
-		var endhour = 24;
-		for (var hour = starthour; hour <= endhour; hour++) {
-			var hourOption = document.createElement("option");
-			hourOption.text = hour;
-			hourOption.value = hour;
-			hourSelect.append(hourOption);
-		}
-		//dropdown for minute
-		var minuteSelect = document.getElementById("minuteSelect");
-		var startminute = 1;
-		var endminute = 60;
-		for (var minute = startminute; minute <= endminute; minute++) {
-			var minuteOption = document.createElement("option");
-			minuteOption.text = minute;
-			minuteOption.value = minute;
-			minuteSelect.append(minuteOption);
-		}
-	</script>
+	<script th:inline="javascript">
+	
+		var instanceId = /*[[${instanceId}]]*/ 0;
 
+		function populateDateTimeDropdowns(instanceId) {
+			// Start Date Dropdowns
+			var startYearSelect = document.getElementById('startYearSelect_' + instanceId);
+			var startMonthSelect = document.getElementById('startMonthSelect_' + instanceId);
+			var startDaySelect = document.getElementById('startDaySelect_' + instanceId);
+			var startHourSelect = document.getElementById('startHourSelect_' + instanceId);
+			var startMinuteSelect = document.getElementById('startMinuteSelect_' + instanceId);
+
+			// End Date Dropdowns
+			var endYearSelect = document.getElementById('endYearSelect_' + instanceId);
+			var endMonthSelect = document.getElementById('endMonthSelect_' + instanceId);
+			var endDaySelect = document.getElementById('endDaySelect_' + instanceId);
+			var endHourSelect = document.getElementById('endHourSelect_' + instanceId);
+			var endMinuteSelect = document.getElementById('endMinuteSelect_' + instanceId);
+
+			// Populate options for Start Date
+			populateDropdown(startYearSelect, 2024, 2029);
+			populateDropdown(startMonthSelect, 1, 12);
+			populateDropdown(startDaySelect, 1, 31);
+			populateDropdown(startHourSelect, 1, 24);
+			populateDropdown(startMinuteSelect, 1, 60);
+
+			// Populate options for End Date
+			populateDropdown(endYearSelect, 2024, 2029);
+			populateDropdown(endMonthSelect, 1, 12);
+			populateDropdown(endDaySelect, 1, 31);
+			populateDropdown(endHourSelect, 1, 24);
+			populateDropdown(endMinuteSelect, 1, 60);
+		}
+
+		function populateDropdown(selectElement, start, end) {
+			for (var i = start; i <= end; i++) {
+				var option = document.createElement("option");
+				option.text = String(i).padStart(2, '0');
+				option.value = String(i).padStart(2, '0');
+				selectElement.appendChild(option);
+			}
+		}
+
+		populateDateTimeDropdowns(instanceId);
+
+	
+	</script>
 </body>
 
 </html>

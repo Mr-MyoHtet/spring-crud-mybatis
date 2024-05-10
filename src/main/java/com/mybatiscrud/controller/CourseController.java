@@ -56,20 +56,36 @@ public class CourseController {
 	}
 
 	@PostMapping("/course/insert")
-	public String insert(Model model, @Validated @ModelAttribute Course course, BindingResult result,
-			@RequestParam(name = "course_img", required = false) MultipartFile file, @RequestParam("year") String year,
-			@RequestParam("month") int month, @RequestParam("day") int day, @RequestParam("hour") int hour,
-			@RequestParam("minute") int minute) throws IOException, ParseException {
-
+	public <ColorForm> String insert(Model model, @Validated @ModelAttribute Course course, BindingResult result,
+			@RequestParam(name = "course_img", required = false) MultipartFile file, 
+			@RequestParam("startYear") String startYear,
+			@RequestParam("startMonth") int startMonth,
+			@RequestParam("startDay") int startDay,
+			@RequestParam("startHour") int startHour,
+			@RequestParam("startMinute") int startMinute, 
+			@RequestParam("endYear") String endYear,
+			@RequestParam("endMonth") int endMonth,
+			@RequestParam("endDay") int endDay,
+			@RequestParam("endHour") int endHour,
+			@RequestParam("endMinute") int endMinute, 
+			@RequestParam("color") String color)
+			     throws IOException, ParseException {
+   
+	
+	
 		// String UPLOADED_FOLDER = "src/main/resources/static/images/";
 		// byte[] bytes = file.getBytes();
 		// Path path = Paths.get(UPLOADED_FOLDER, file.getOriginalFilename());
 		// Files.write(path, bytes);
-		Date startDate = service.formatStringToDate(year, month, day, hour, minute);
+		
+		Date start_date = service.formatStringToDate(startYear, startMonth, startDay, startHour, startMinute);
+		Date end_date = service.formatStringToDate(endYear, endMonth, endDay, endHour, endMinute);
 		String filename = file.getOriginalFilename();
 		course.setCourse_img(filename);
-		course.setStart_date(startDate);
-		service.insert(course);
+		course.setStart_date(start_date);
+		course.setEnd_date(end_date);
+		course.setColor(color);
+	    service.insert(course);
 
 		return "/courses/insert";
 	}

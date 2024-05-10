@@ -26,8 +26,8 @@
 	</select>
 	<insert id="insert">
 		insert into
-		course(name,start_date,end_date,duration,fees,available,course_img)
-		values(#{name},#{start_date},#{end_date},#{duration},#{fees},#{available},#{course_img})
+		course(name,start_date,end_date,duration,fees,color,available,course_img)
+		values(#{name},#{start_date},#{end_date},#{duration},#{fees},#{color},#{available},#{course_img})
 	</insert>
 
 	<select id="edit" resultType="com.mybatiscrud.model.Course">
