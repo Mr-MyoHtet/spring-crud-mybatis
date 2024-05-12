@@ -29,7 +29,10 @@
 		course(name,start_date,end_date,duration,fees,color,available,course_img)
 		values(#{name},#{start_date},#{end_date},#{duration},#{fees},#{color},#{available},#{course_img})
 	</insert>
-
+     <update id="update">
+		update course set name =#{name}, group_name =#{group_name},start_date=#{start_date}, end_date=#{end_date},
+		duration =#{duration},fees=#{fees},color=#{color},available=#{available},course_img =#{course_img} where id =#{id}
+	 </update>
 	<select id="edit" resultType="com.mybatiscrud.model.Course">
 		select * from course where id = #{id}
 	</select>

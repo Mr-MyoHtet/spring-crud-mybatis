@@ -1,16 +1,193 @@
 <!DOCTYPE html>
+
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head>
-	<title>Edit Course</title>
+	<title>mybatis crud</title>
+	<link rel="stylesheet" th:href="@{/webjars/bootstrap/5.3.2/css/bootstrap.min.css}">
+	<script th:src="@{/webjars/bootstrap/5.3.2/js/bootstrap.min.js}"></script>
+	<!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+		-->
+
 </head>
 
 <body>
-
-	<div>
-        <p>Hello</p>
+	<div class=" mx-auto mt-3 mb-3" style="width: 1024px;">
+		<a href="" th:href=" @{/course/back}" class="mb-3">
+			<button class="btn btn-primary btn-small">Back</button>
+		</a>
 	</div>
+	<div class=" mx-auto mt-4 mb-4" style="width: 1024px;">
+		<form th:object="${course}" th:action="@{/course/{id}/update(id=${id})}" method="post"
+			enctype="multipart/form-data">
+			<div class="mb-3">
+				<label for="name" class="form-label">Name</label>
+				<input type="text" class="form-control" id="name" placeholder="Name" th:field="*{name}">
+			</div>
+			<div class="mb-3">
+				<label for="name" class="form-label">Group Name</label>
+				<input type="text" class="form-control" id="group_name" placeholder="Name" th:field="*{group_name}">
+			</div>
+			<div class="mb-3">
+				<div>
+					<label for="start_date" class="form-label">Start Date</label>
+				</div>
+				<span>Year
+					<select th:id="${'startYearSelect_' + __${instanceId}__}" name="startYear" style="margin: 7px;">
+						<option th:value="${startYear}" th:text="${startYear}"></option>
+				</span>
+				</select>
+				<span> Month
+					<select th:id="${'startMonthSelect_' + __${instanceId}__}" name="startMonth" style="margin: 7px;">
+						<option th:value="${startMonth}" th:text="${startMonth}"></option>
+				</span>
+				</select>
+				<span>Days
+					<select th:id="${'startDaySelect_' + __${instanceId}__}" name="startDay" style="margin: 7px;">
+						<option th:value="${startDay}" th:text="${startDay}"></option>
+				</span>
+				</select>
+				<span>Hour
+					<select th:id="${'startHourSelect_' + __${instanceId}__}" name="startHour" style="margin: 7px;">
+						<option th:value="${startHour}" th:text="${startHour}"></option>
 
+				</span>
+				</select>
+				<span>Minute
+					<select th:id="${'startMinuteSelect_' + __${instanceId}__}" name="startMinute"
+						style="margin: 10px;">
+						<option th:value="${startMinute}" th:text="${startMinute}"></option>
+				</span>
+				</select>
+			</div>
+			<div class="mb-3">
+				<div>
+					<label for="end_date" class="form-label">End Date</label>
+				</div>
+				<span>Year
+					<select th:id="${'endYearSelect_' + __${instanceId}__}" name="endYear" style="margin: 7px;">
+						<option th:value="${endYear}" th:text="${endYear}"></option>
+				</span>
+				</select>
+				<span>Month
+					<select th:id="${'endMonthSelect_' + __${instanceId}__}" name="endMonth" style="margin: 7px;">
+						<option th:value="${endMonth}" th:text="${endMonth}"></option>
+
+				</span>
+				</select>
+				<span>Days
+					<select th:id="${'endDaySelect_' + __${instanceId}__}" name="endDay" style="margin: 7px;">
+						<option th:value="${endDay}" th:text="${endDay}"></option>
+
+				</span>
+				</select>
+				<span>Hour
+					<select th:id="${'endHourSelect_' + __${instanceId}__}" name="endHour" style="margin: 7px;">
+						<option th:value="${endHour}" th:text="${endHour}"></option>
+				</span>
+				</select>
+				<span>Minute
+					<select th:id="${'endMinuteSelect_' + __${instanceId}__}" name="endMinute" style="margin: 7px;">
+						<option th:value="${endMinute}" th:text="${endMinute}"></option>
+				</span>
+				</select>
+			</div>
+			<div class="mb-3">
+				<label for="duration" class="form-label">Duration</label>
+				<input type="number" class="form-control" id="duration" placeholder="Duration" th:field="*{duration}">
+			</div>
+			<div class="mb-3">
+				<label for="fees" class="form-label">Fees</label>
+				<input type="number" class="form-control" id="fees" placeholder="Fees" th:field="*{fees}">
+			</div>
+			<div class="mb-3">
+				<label for="color" class="form-label">Pick a Color:</label>
+				<input type="color" id="color" name="color" th:field="*{color}" class="form-control"
+					style="width: 150px;" th:value="${color ?: '#ffff'}" th:placeholder="${color ?: '#ffff'}" />
+			</div>
+			<div class="mb-0">
+				<label for="fees" class="form-label">Available</label>
+			</div>
+			<div class="form-check form-check-inline mb-3">
+				<input class="form-check-input" type="radio" name="available" id="inlineRadio1" value="YES"
+					th:field="*{available}">
+				<label class="form-check-label" for="inlineRadio1">YES</label>
+			</div>
+			<div class="form-check form-check-inline mb-3">
+				<input class="form-check-input" type="radio" name="available" id="inlineRadio2" value="NO"
+					th:field="*{available}">
+				<label class=" form-check-label" for="inlineRadio2">NO</label>
+			</div>
+			<!--<img th:src="@{/images/} + ${imageFilename}" alt="Course Image"/>
+				-->
+			<!--<img th:src="@{'/images/' + ${imageFilename}}" alt="Course Image" />
+
+			<th data-th-text="${imageFilename}"></th>
+			-->
+			<div class="mb-4">
+				<!--<div th:if="${imageFilename != null}">
+					-->
+				<!--<th data-th-text="${imageFilename}"></th>
+						-->
+				<!--</div>
+					-->
+				<!--<label for="course_img" class="form-label">Course Cover Image</label>
+				<input type="file" class="form-control" id="course_img" placeholder="Course Image"
+					th:field="*{course_img}">
+			</div>
+			-->
+				<div class="mb-3">
+					<button type="submit" class="btn btn-primary form-control">Update</button>
+				</div>
+			</div>
+		</form>
+		<script th:inline="javascript">
+
+			var instanceId = /*[[${instanceId}]]*/ 0;
+
+			function populateDateTimeDropdowns(instanceId) {
+				// Start Date Dropdowns
+				var startYearSelect = document.getElementById('startYearSelect_' + instanceId);
+				var startMonthSelect = document.getElementById('startMonthSelect_' + instanceId);
+				var startDaySelect = document.getElementById('startDaySelect_' + instanceId);
+				var startHourSelect = document.getElementById('startHourSelect_' + instanceId);
+				var startMinuteSelect = document.getElementById('startMinuteSelect_' + instanceId);
+
+				// End Date Dropdowns
+				var endYearSelect = document.getElementById('endYearSelect_' + instanceId);
+				var endMonthSelect = document.getElementById('endMonthSelect_' + instanceId);
+				var endDaySelect = document.getElementById('endDaySelect_' + instanceId);
+				var endHourSelect = document.getElementById('endHourSelect_' + instanceId);
+				var endMinuteSelect = document.getElementById('endMinuteSelect_' + instanceId);
+
+				// Populate options for Start Date
+				populateDropdown(startYearSelect, 2024, 2029);
+				populateDropdown(startMonthSelect, 1, 12);
+				populateDropdown(startDaySelect, 1, 31);
+				populateDropdown(startHourSelect, 1, 24);
+				populateDropdown(startMinuteSelect, 1, 60);
+
+				// Populate options for End Date
+				populateDropdown(endYearSelect, 2024, 2029);
+				populateDropdown(endMonthSelect, 1, 12);
+				populateDropdown(endDaySelect, 1, 31);
+				populateDropdown(endHourSelect, 1, 24);
+				populateDropdown(endMinuteSelect, 1, 60);
+			}
+
+			function populateDropdown(selectElement, start, end) {
+				for (var i = start; i <= end; i++) {
+					var option = document.createElement("option");
+					option.text = i < 10 ? '0' + i : i;
+					option.value = i;
+					selectElement.appendChild(option);
+				}
+			}
+
+			populateDateTimeDropdowns(instanceId);
+
+
+		</script>
 </body>
 
 </html>

@@ -1,20 +1,12 @@
 package com.mybatiscrud.controller;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
-import java.util.Random;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -40,6 +32,7 @@ import com.mybatiscrud.model.Course;
 import com.mybatiscrud.model.Module;
 import com.mybatiscrud.model.Teacher;
 import com.mybatiscrud.service.CourseService;
+import com.mybatiscrud.service.FolderRefreshService;
 
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -49,6 +42,9 @@ public class CourseController {
 	@Autowired
 	CourseService service;
 
+	@Autowired
+	private FolderRefreshService folderRefreshService;
+
 	@GetMapping("/course/create")
 	public String create(Model model, @ModelAttribute Course course) {
 		model.addAttribute("course", course);
@@ -57,37 +53,31 @@ public class CourseController {
 
 	@PostMapping("/course/insert")
 	public <ColorForm> String insert(Model model, @Validated @ModelAttribute Course course, BindingResult result,
-			@RequestParam(name = "course_img", required = false) MultipartFile file, 
-			@RequestParam("startYear") String startYear,
-			@RequestParam("startMonth") int startMonth,
-			@RequestParam("startDay") int startDay,
-			@RequestParam("startHour") int startHour,
-			@RequestParam("startMinute") int startMinute, 
-			@RequestParam("endYear") String endYear,
-			@RequestParam("endMonth") int endMonth,
-			@RequestParam("endDay") int endDay,
-			@RequestParam("endHour") int endHour,
-			@RequestParam("endMinute") int endMinute, 
-			@RequestParam("color") String color)
-			     throws IOException, ParseException {
-   
-	
-	
+			@RequestParam(name = "course_img", required = false) MultipartFile file,
+			@RequestParam("startYear") String startYear, @RequestParam("startMonth") String startMonth,
+			@RequestParam("startDay") String startDay, @RequestParam("startHour") String startHour,
+			@RequestParam("startMinute") String startMinute, @RequestParam("endYear") String endYear,
+			@RequestParam("endMonth") String endMonth, @RequestParam("endDay") String endDay,
+			@RequestParam("endHour") String endHour, @RequestParam("endMinute") String endMinute,
+			@RequestParam("color") String color) throws IOException, ParseException {
+
+		Date start_date = service.formatStringToDate(startYear, startMonth, startDay, startHour, startMinute);
+		Date end_date = service.formatStringToDate(endYear, endMonth, endDay, endHour, endMinute);
+		// String filename = file.getOriginalFilename();
+		String fileName = service.storeFile(file);
+		course.setCourse_img(fileName);
+		course.setStart_date(start_date);
+		course.setEnd_date(end_date);
+		course.setColor(color);
+		folderRefreshService.refreshFolder();
+		service.insert(course);
+		return "/courses/insert";
+
 		// String UPLOADED_FOLDER = "src/main/resources/static/images/";
 		// byte[] bytes = file.getBytes();
 		// Path path = Paths.get(UPLOADED_FOLDER, file.getOriginalFilename());
 		// Files.write(path, bytes);
-		
-		Date start_date = service.formatStringToDate(startYear, startMonth, startDay, startHour, startMinute);
-		Date end_date = service.formatStringToDate(endYear, endMonth, endDay, endHour, endMinute);
-		String filename = file.getOriginalFilename();
-		course.setCourse_img(filename);
-		course.setStart_date(start_date);
-		course.setEnd_date(end_date);
-		course.setColor(color);
-	    service.insert(course);
 
-		return "/courses/insert";
 	}
 
 	@GetMapping("/")
@@ -100,7 +90,6 @@ public class CourseController {
 		int totalDisplayedPages = 1; // Total number of links to display
 		int boundaryPages = 1; // Number of pages to display at the start and end
 		int surroundingPages = 1; // Number of pages surrounding the current page
-
 		Page<Course> click_search = service.getListClick(name, start_date, end_date, pageable);
 		Course c = new Course();
 		c.setName(name);
@@ -149,9 +138,71 @@ public class CourseController {
 
 	}
 
+	@GetMapping("/course/edit/{id}")
+	public String edit(Model model, @ModelAttribute Course course, @PathVariable(value = "id") int id) {
+
+		Course course_edit = service.edit(id);
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy MM dd HH mm");
+		String start_date = sdf.format(course_edit.getStart_date());
+		String end_date = sdf.format(course_edit.getEnd_date());
+		String[] split_start_date = start_date.split(" ");
+		String start_year = split_start_date[0];
+		String start_month = split_start_date[1];
+		String start_day = split_start_date[2];
+		String start_hour = split_start_date[3];
+		String start_minute = split_start_date[4];
+		
+		String[] split_end_date = end_date.split(" ");
+		String end_year = split_end_date[0];
+		String end_month = split_end_date[1];
+		String end_day = split_end_date[2];
+		String end_hour = split_end_date[3];
+		String end_minute = split_end_date[4];
+		
+		model.addAttribute("startYear", start_year);
+		model.addAttribute("startMonth", start_month);
+		model.addAttribute("startDay", start_day);
+		model.addAttribute("startHour", start_hour);
+		model.addAttribute("startMinute", start_minute);
+		model.addAttribute("endYear", end_year);
+		model.addAttribute("endMonth", end_month);
+		model.addAttribute("endDay", end_day);
+		model.addAttribute("endHour", end_hour);
+		model.addAttribute("endMinute", end_minute);
+		model.addAttribute("course", course_edit);
+
+		return "/courses/edit";
+	}
+
+	@PostMapping("/course/{id}/update")
+	public String update(Model model, @ModelAttribute Course course, @PathVariable(value = "id") int id,
+			@RequestParam(name = "course_img", required = false) MultipartFile file,
+			@RequestParam("startYear") String startYear, @RequestParam("startMonth") String startMonth,
+			@RequestParam("startDay") String startDay, @RequestParam("startHour") String startHour,
+			@RequestParam("startMinute") String startMinute, @RequestParam("endYear") String endYear,
+			@RequestParam("endMonth") String endMonth, @RequestParam("endDay") String endDay,
+			@RequestParam("endHour") String endHour, @RequestParam("endMinute") String endMinute) throws ParseException {
+		Date start_date = service.formatStringToDate(startYear, startMonth, startDay, startHour, startMinute);
+	    Date end_date = service.formatStringToDate(endYear, endMonth, endDay, endHour, endMinute);
+		course.setStart_date(start_date);
+		course.setEnd_date(end_date);
+		model.addAttribute("startYear", startYear);
+		model.addAttribute("startMonth", startMonth);
+		model.addAttribute("startDay", startDay);
+		model.addAttribute("startHour", startHour);
+		model.addAttribute("startMinute", startMinute);
+		model.addAttribute("endYear", endYear);
+		model.addAttribute("endMonth", endMonth);
+		model.addAttribute("endDay", endDay);
+		model.addAttribute("endHour", endHour);
+		model.addAttribute("endMinute", endMinute);
+		service.update(course);
+		
+		return "/courses/edit";
+	}
+
 	@GetMapping("/course/csv/{id}")
 	public ResponseEntity<byte[]> csv(@PathVariable(value = "id") int id) {
-
 		Course course = service.csvTest(id);
 		// Generate CSV content
 		byte[] csvContent = generateCsvContent(course);

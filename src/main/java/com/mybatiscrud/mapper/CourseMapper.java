@@ -26,7 +26,7 @@ public interface CourseMapper {
     public List<Course> search(Course course,RowBounds rowBounds);
 
     //edit
-	List<Course> edit(int id);
+	Course edit(int id);
 
 
 	Course csv(int id);
@@ -39,6 +39,9 @@ public interface CourseMapper {
 
 
 	Course csvTest(int id);
+
+
+	void update(Course course);
 
 
 

@@ -1,13 +1,14 @@
 package com.mybatiscrud.service;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
-import java.util.TimeZone;
 
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,10 +16,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
 import com.mybatiscrud.mapper.CourseMapper;
 import com.mybatiscrud.model.Course;
-
-import net.sf.jsqlparser.expression.DateTimeLiteralExpression.DateTime;
 
 @Service
 public class CourseService {
@@ -48,8 +49,12 @@ public class CourseService {
 		return new PageImpl<>(search_course, pageable, searchTotal); //
 	}
 
-	public List<Course> edit(int id) {
+	public Course edit(int id) {
 		return mapper.edit(id);
+	}
+	
+	public void update(Course course) {
+		mapper.update(course);
 	}
 
 	public Course csv(int id) {
@@ -96,41 +101,24 @@ public class CourseService {
 		return mapper.csvTest(id);
 	}
 
-	public Date formatStringToDate(String year, int month, int day, int hour, int minute) throws ParseException {
-		String monthStringFormat = null;
-		String dayStringFormat = null;
-		String hourStringFormat = null;
-		String minuteStringFormat = null;
-		if (month < 10) {
-			monthStringFormat = "0" + month;
-		} else {
-			monthStringFormat =String.valueOf(month);
-		}
-		if (day < 10) {
-			dayStringFormat = "0" + day;
-		} else {
-			dayStringFormat =  String.valueOf(day);
-		}
-		if (hour < 10) {
-			hourStringFormat = "0" + hour;
-		}
-		else {
-			hourStringFormat = String.valueOf(hour);
-		}
-		if (minute < 10) {
-			minuteStringFormat = "0" + minute;
-		}
-		else {
-			minuteStringFormat = String.valueOf(minute);
-		}
-
-		String startDateStringFromat = year + "-" + monthStringFormat + "-" + dayStringFormat + " " + hourStringFormat + ":"
-				+ minuteStringFormat;
-
+	public Date formatStringToDate(String year, String month, String day, String hour, String minute) throws ParseException {
+		String startDateStringFromat = year + "-" + month + "-" + day + " " + hour
+				+ ":" + minute;
 		SimpleDateFormat startDateOutput = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 		Date date = startDateOutput.parse(startDateStringFromat);
 
 		return date;
 	}
+
+	private final Path fileStorageLocation = Paths.get("src/main/resources/static/images/");
+
+	public String storeFile(MultipartFile file) throws IOException {
+		Path targetLocation = this.fileStorageLocation.resolve(file.getOriginalFilename());
+		Files.copy(file.getInputStream(), targetLocation);
+		
+		return file.getOriginalFilename();
+	}
+
+	
 
 }
